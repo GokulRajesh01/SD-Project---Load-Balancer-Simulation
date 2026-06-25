@@ -1,0 +1,35 @@
+SYSTEM DESIGN PROJECT 2: LOAD BALANCE SIMULATOR
+
+-> Functional Requirements
+a. Incoming APIs shall be redirected in a round robin manner to the servers present using the load balancer
+b. Assuming the number of servers to be 3 in this case.
+c. Each server shall respond with "Hello, from server <server_id>!" when load balancer forwards the incoming request
+d. The load balancer shall forward incoming HTTP requests to backend servers using an HTTP client.
+e. The load balancer shall attempt all currently available backend servers before returning 503 Service Unavailable if none can successfully process the request.
+
+-> Non Functional Requirements
+a. Scalable, if number of servers goes up the round robin shall include them as well vice versa as well
+b. High Availability, if a server goes down, the request shall be distributed among the rest of the servers in a round robin manner
+c. Low Latency, Load balancing should introduce minimal overhead before forwarding the request.
+d. Thread Safety
+e. Extensibility, The routing algorithm should be easily replaceable so that other strategies such as Least Connections or Weighted Round Robin can be added with minimal code changes.
+
+-> Scope
+a. Scope includes distributing the incoming requests among the back end servers in a round robin manner
+b. Hardcoded list to be used for server discovery. Future enhancement to use Eureka or Kubernetes.
+c. Backend server availability shall be determined by failed request forwarding attempts. Active health checks may be introduced as a future enhancement.
+d. The authentication/authorization of the incoming request is not included in the scope, the incoming request is assumed to be authorized and authenticated
+e. No scope for redis/cache.
+f. No scope for microservice architecture since there the endpoint purpose is the same and not different business requirement.
+g. API Gateway to be avoided since only routing is the focus here and none of the other activities related to an API Gateway here.
+h. Assuming there is no rate limiter in the scope so as to fully explore the simulation without any 429 errors blocking the number of times request is made.
+
+-> Traffic Estimation
+Assume
+1000 requests/
+3 backend servers
+Uniform request distribution
+Round Robin expected
+333
+333
+334
