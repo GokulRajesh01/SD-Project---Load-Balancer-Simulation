@@ -1,26 +1,27 @@
 package com.LoadBalancer.service;
 
 import com.LoadBalancer.config.BackendProperties;
-import com.LoadBalancer.config.BackendServer;
 import org.springframework.stereotype.Service;
 
-import java.net.ServerSocket;
 import java.util.List;
 
 @Service
 public class LoadBalancerService {
-    private List<String> servers;
 
-    private BackendProperties properties;
+    private final BackendProperties properties;
 
-    private RoundRobinStrategy strategy;
+    private final RoundRobinStrategy strategy;
 
-    public LoadBalancerService(BackendProperties properties, RoundRobinStrategy strategy){
+    private final HttpForwardingService httpForwardingService;
+
+    public LoadBalancerService(BackendProperties properties, RoundRobinStrategy strategy, HttpForwardingService service){
         this.properties = properties;
         this.strategy = strategy;
+        this.httpForwardingService = service;
     }
 
     public String sayHello(){
-        return strategy.getNextUrl(properties.servers());
+        String serverUrl =  strategy.getNextUrl(properties.servers());
+        return httpForwardingService.forwardRequest(serverUrl);
     }
 }
